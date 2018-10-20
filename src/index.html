@@ -11,39 +11,38 @@
   </head>
 
   <body class="wrapper">
-    <aside class="sidebar">
-      <div class="sidebar__logo">
-        <img src="images/logo.png" />
+      <aside class="sidebar">
+          <div class="sidebar__logo">
+              <img src="images/logo.png" />
+          </div>
+      </aside>
+      <div class="content">
+          <header class="header">
+              <h1 class="header__title">#tagchatter</h1>
+              <div class="header__parrots-count">
+                  <span class="header__title" id="parrots-counter">-</span>
+              </div>
+
+          </header>
+          <div class="messages">
+              <!-- <span id="messages__box"></span>-->
+              <table id="table__avatars"></table>
+              <table id="table__messages"></table>
+          </div>
+
       </div>
-    </aside>
+      <div class="background">
+          <div class="background__avatar">
+              <!-- Aqui será colocado a imagem do usuário
+        <img id="avatar" />-->
+          </div>
 
-    <div class="content">
-        <header class="header">
-            <h1 class="header__title">#tagchatter</h1>
-            <div class="header__parrots-count">
-                <span class="header__title" id="parrots-counter">-</span>
-            </div>
-
-        </header>
-        <div class="messages">
-           <!-- <span id="messages__box"></span>-->
-            <table id="table__avatars"></table>
-            <table id="table__messages"></table>
-         </div>
-        <div class="background">
-            <div class="background__avatar">
-                <!-- Aqui será colocado a imgaem do usuário
-                <img id="avatar" />-->
-            </div>
-            
-            <div class="background__text">
-                <input id="text"></input>
-            </div>
-            <div class="background__send">
-                <img id="img__send"src="images/send__icon.jpg" >
-            </div>
-        </div>
-    </div>
-
+          <div class="background__text">
+              <input id="text"></input>
+          </div>
+          <div class="background__send">
+              <img id="img__send" src="images/send_icon.jpg">
+          </div>
+      </div>
   </body>
 </html>

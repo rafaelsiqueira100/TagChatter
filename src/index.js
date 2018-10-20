@@ -1,8 +1,10 @@
+
 (function (apiUrl) {
     //constantes que eu criei
     //tem que atualizar a lista de mensagens a cada 3 segundos
     const intervalMsgs = 3000;//3 segundos
-   
+    const fetch = require('node-fetch');
+    //const fetch = require("fetch");
   function fetchParrotsCount() {
     return fetch(apiUrl + "/messages/parrots-count")
       .then(function(response) {
@@ -25,7 +27,7 @@
           .then(function (messages) {
               document.getElementById("table__avatars").innerHTML = "";
               document.getElementById("table__messages").innerHTML = "";
-              for (int i = 0; i < messages.length; i++){
+              for (var i = 0; i < messages.length; i++){
                 //principais atributos:
                 /*
                 avatar da pessoa
@@ -40,10 +42,11 @@
                 table__messages.innerHTML += "<td>" + messages[i].author.name+"</td>";
                 table__messages.innerHTML += "<td>" + messages[i].createdAt + "</td>";
                 if (messages[i].hasParrot) {
-                    table__messages.innerHTML += "<td><img src='images/parrot.gif' /></td>";
+                        //javascript: no onclick
+                        table__messages.innerHTML += "<td><img src='images/parrot.gif' onclick='unparrotMessage("+messages[i].id+");' /></td>";
                 }
                 else {
-                    table__messages.innerHTML += "<td></td>";
+                    table__messages.innerHTML += "<td><img src='images/light-parrot.svg' onclick='parrotMessage(" + messages[i].id + ");'></td>";
                 }
                 table__messages.innerHTML += "</tr>";
                 table__messages.innerHTML += "<tr>";
@@ -57,8 +60,19 @@
   function parrotMessage(messageId) {
     // Faz um request para marcar a mensagem como parrot no servidor
     // Altera a mensagem na lista para que ela apareça como parrot na interface
-
-    }
+      return fetch(apiUrl + "/messages/" + messageId + "/parrot")
+          .then(function (response) {
+              fetchParrotsCount();
+              return response.json();
+          });
+}
+function unparrotMessage(messageId) {
+    return fetch(apiUrl + "/messages/" + messageId + "/unparrot")
+        .then(function (response) {
+            fetchParrotsCount();
+            return response.json();
+        });
+}
     function send() {
         var msg = document.getElementById("text").value;
         sendMessage(msg, i.id);
@@ -81,7 +95,7 @@
           .then(function (response) {
               return response.json();
           })
-        .catch(err => );
+        .catch(err => alert("Não foi possível enviar a mensagem. Tente novamente!"));
   }
 
   function getMe() {
@@ -106,7 +120,7 @@
       getMe();
       var handleImgSend = 
           document.getElementById("img__send")
-      handleImgSend.onclick = send()
+      handleImgSend.onclick = send();
       window.setInterval(listMessages(), intervalMsgs);
 
   }
