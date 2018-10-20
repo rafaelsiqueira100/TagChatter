@@ -57,10 +57,11 @@
   function parrotMessage(messageId) {
     // Faz um request para marcar a mensagem como parrot no servidor
     // Altera a mensagem na lista para que ela apareça como parrot na interface
+
     }
     function send() {
         var msg = document.getElementById("text").value;
-        sendMessage(msg, myId);
+        sendMessage(msg, i.id);
 
     }
   function sendMessage(message, authorId) {
@@ -68,8 +69,9 @@
     // Caso o request falhe exibe uma mensagem para o usuário utilizando Window.alert ou outro componente visual
     // Se o request for bem sucedido, atualiza o conteúdo da lista de mensagens
       var date_now = new Date();
-      var now = new 
-      var body = { id: authorId, content: new String(message), has_parrot: false,   }
+      var now = date.toISOString();
+      
+      var body = { id: authorId, content: new String(message), created_at: new String(now), has_parrot: false, author: i }
       return fetch(apiUrl + "/messages/parrots-count",
           {
               method: 'POST',
@@ -91,13 +93,10 @@
               return response.json();
           })
           .then(function (me) {
-              var myId = me.id;
-              var myName = me.name;
-              var myAvatar = me.avatar
-              document.getElementById("background__avatar").innerHTML = <img id="avatar" > myAvatar</img>;
-              myId = id;
-              myName = name;
-              myAvatar = avatar;
+              //variável global i guarda os atributos do usuário que está recebendo mensagens
+              i = me;
+              document.getElementById("background__avatar").innerHTML = "<img id='avatar' src=" + i.avatar + " /> ";
+              
           });
   }
 
