@@ -3,6 +3,9 @@
     //constantes que eu criei
     //tem que atualizar a lista de mensagens a cada 3 segundos
     const intervalMsgs = 3000;//3 segundos
+    var I = null;
+    var isUpdating = false;
+    var isListing = false;
     /*const fetch = require('node-fetch');
     //fetch: para fazer requisições rest HTML
     const debug = require('debug')('app');
@@ -38,19 +41,86 @@
               return response.json();
             })
             .then(function (count) {
-                var spanParrotsCounter = document.getElementById("parrots-counter");
-                if (spanParrotsCounter != null)
-                    spanParrotsCounter.innerHTML = count;
+                counter = count;
+                updateParrotsCount();
 
             });
-  }
+    }
+    function updateParrotsCount() {
+        var spanParrotsCounter = document.getElementById("parrots-counter");
+        if (spanParrotsCounter != null)
+            spanParrotsCounter.innerHTML = counter;
 
+    }
+    function parrotMessage(event) {
+        // Faz um request para marcar a mensagem como parrot no servidor
+        // Altera a mensagem na lista para que ela apareça como parrot na interface
+        //debug('parrotMessage');
+        while (isListing) {
+
+        }
+        console.log('parrotMessage');
+        var messageId = event.target.param;
+        console.log(messageId);
+
+        var img = document.getElementById(messageId + messageId);
+        img.src = "images/parrot.gif";
+        isUpdating = true;
+        counter++;
+        updateParrotsCount();
+
+        img.addEventListener('click', unparrotMessage);
+        img.param = messageId;
+
+        return fetch(apiUrl + "/messages/" + messageId + "/parrot",
+            {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' }
+            }
+        )
+            .then(function (response) {
+                isUpdating = false;
+                return response.json();
+            }).catch();
+    }
+    function unparrotMessage(event) {
+        //debug("unparrotMessage");
+        while (isListing) {
+
+        }
+        console.log('unparrotMessage');
+
+        var messageId = event.target.param;
+        console.log(messageId);
+        var img = document.getElementById(messageId + messageId);
+        img.src = "images/light-parrot.svg";
+        isUpdating = true;
+        counter--;
+        updateParrotsCount();
+        img.addEventListener('click', parrotMessage);
+        img.param = messageId;
+        return fetch(apiUrl + "/messages/" + new String(messageId) + "/unparrot", {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' }
+        }
+        )
+            .then(function (response) {
+                isUpdating = false;
+                return response.json();
+            }).catch();
+    }
       function listMessages() {
         // Faz um request para a API de listagem de mensagens
         // Atualiza a o conteúdo da lista de mensagens
         // Deve ser chamado a cada 3 segundos
           //debug('listMessages');
           //console.log('listMessages');
+          while (isUpdating) {
+
+          }
+          isListing = true;
+          fetchParrotsCount();
+          
           return fetch(apiUrl + "/messages/")
               .then(function (response)
               {
@@ -114,12 +184,14 @@
                                 //javascript: no onclick
                                 cellParrot.innerHTML = '<img src="images/parrot.gif" id="' + messages[i].id + messages[i].id + '" />';
                                 var handleImgParrot = document.getElementById(messages[i].id + messages[i].id);
-                                handleImgParrot.addEventListener('click', unparrotMessage(new String(messages[i].id)));
+                                handleImgParrot.addEventListener('click',  unparrotMessage);
+                                handleImgParrot.param = messages[i].id;
                             }
                             else {
                                 cellParrot.innerHTML = '<img src="images/light-parrot.svg" id="' + messages[i].id + messages[i].id + '" />';
-                                var handleImgParrot = document.getElementById(messages[i].id + messages[i].id);
-                                handleImgParrot.addEventListener('click', parrotMessage(new String(messages[i].id)));
+                                  var handleImgParrot = document.getElementById(messages[i].id + messages[i].id);
+                                handleImgParrot.addEventListener('click', parrotMessage);
+                                handleImgParrot.param = messages[i].id;
                             }
                             var cellContent = row1.insertCell(0);
                             cellContent.innerHTML = messages[i].content;
@@ -130,30 +202,11 @@
                         
                     }
                   
-              
+                    isListing = false;
               });
       }
 
-      function parrotMessage(messageId) {
-        // Faz um request para marcar a mensagem como parrot no servidor
-        // Altera a mensagem na lista para que ela apareça como parrot na interface
-          //debug('parrotMessage');
-          console.log('parrotMessage');
-          return fetch(apiUrl + "/messages/"+  new String(messageId)  +"/parrot")
-              .then(function (response) {
-                  fetchParrotsCount();
-                  return response.json();
-              }).catch();
-      }
-    function unparrotMessage(messageId) {
-        //debug("unparrotMessage");
-        console.log('unparrotMessage');
-        return fetch(apiUrl + "/messages/" + new String(messageId) + "/unparrot")
-            .then(function (response) {
-                fetchParrotsCount();
-                return response.json();
-            }).catch();
-    }
+      
     function send() {
 
         //debug("send");
@@ -220,9 +273,6 @@
         console.log('initialize');
         listMessages();
         setInterval(listMessages, intervalMsgs);
-      
-        fetchParrotsCount();
-
         getMe();
         var handleImgSend =
             document.getElementById("img__send");
