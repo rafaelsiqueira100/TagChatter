@@ -11,7 +11,7 @@
     "faker": "^4.1.0",
     "fetch": "^1.1.0",
     "morgan": "^1.9.1",
-    "node-fetch": "^2.2.0",
+    "node-fetch": "^2.6.7",
     "ramda": "^0.24.1",
     "ramda-fantasy": "^0.8.0",
     "random-js": "^1.0.8",
